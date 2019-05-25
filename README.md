@@ -8,7 +8,7 @@ Dan Li working on the FX Trading Prediction.
 
 ### Step 1: Basic Chart
 
-* Scrap 2016 USD/CAD data
+* Scrap 2016 EUR/USD data
 
 * Plotly Chart for general data
 
@@ -45,8 +45,17 @@ Dan Li working on the FX Trading Prediction.
 ### Dataset
 
 * Sample trader 2016 trading data from:
- https://www.kaggle.com/zayedshah/fx-trading-analysis-part-2
+2015: https://www.kaggle.com/zayedshah/trades-2015/downloads/Trades%202015.xlsx/1
+2016: https://www.kaggle.com/zayedshah/fx-trading-analysis-part-2
 
+ * EUR USD Forex Pair Historical Data (2002 - 2019):
+ https://www.kaggle.com/imetomi/eur-usd-forex-pair-historical-data-2002-2019
+ 
+ * Economic calendar Investing.com Forex (2011-2019):
+ https://www.kaggle.com/devorvant/economic-calendar/downloads/economic-calendar.zip/13
+
+* Year on year trading analysis:
+https://www.kaggle.com/zayedshah/fx-trading-analysis-part-3 
 
 **Good luck!**
 
