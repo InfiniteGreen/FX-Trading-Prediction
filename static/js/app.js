@@ -26,6 +26,7 @@ function handleSubmit() {
 
   // Build the plot with the new fx pair  
   buildPlot(fx, ao);
+
   // Render the new fx stats in table
   renderTable(fx,ao); 
 };
@@ -85,6 +86,45 @@ function handleTradeData (fx, ao) {
  
 };
 
+function filterTradeData (fx){
+  var inputFXSymbol = fx.replace(/_/g, '/');
+  // var tradeSymbol = [];
+  var tradeOpenDate = [];
+  var tradeCloseDate = [];
+  var tradeOpenPrice = [];
+  var tradeClosePrice = []; 
+  var NetPnL = [];
+
+  // Create an array with the filtered values
+  filteredData = tradeData.filter(trade => {        
+    if (inputFXSymbol === trade.Symbol){
+      return true;
+    }
+    else {
+      return false;
+    };
+  }); 
+  // console.log(filteredData);
+  
+
+  //Loop through filteredData to get data to arrays
+  for (var i=0; i<filteredData.length; i++){
+    // console.log(Object.keys(filteredData[i]));
+    // console.log(filteredData[i]["Date Open"]);
+    tradeOpenDate.push(filteredData[i]["Date Open"]);
+    tradeCloseDate.push(filteredData[i]["Date Close"]);
+    tradeOpenPrice.push(filteredData[i]["Bought"]);
+    tradeClosePrice.push(filteredData[i]["Sold"]);
+    NetPnL.push(filteredData[i]["Net PL"]);
+  };
+  return {
+    tradeOpenDate: tradeOpenDate,
+    tradeCloseDate: tradeCloseDate,
+    tradeOpenPrice: tradeOpenPrice,
+    tradeClosePrice: tradeClosePrice,
+    NetPnL: NetPnL
+  };
+};
 
 function buildPlot(fx, ao) {
   var trace1 = {};
@@ -111,7 +151,7 @@ function buildPlot(fx, ao) {
     };  
 
   switch (ao) {
-    //API with last 365 days of fx data  
+    //Case #1: Chart last 365 days of fx data  
     case "fx_general":
       trace1 = {
         type: "scatter",
@@ -125,47 +165,20 @@ function buildPlot(fx, ao) {
       };
       data = [trace1];
       layout = {
-        title: `${fx} closing prices`,
+        title: `${fx} Last 365 Days Closing Prices`,
         xaxis: {
           range: [time[0], time[-1]],
           type: "date"
         },
       };
-      break;
+    break;
 
-    //Graph general 2016 chart with Rectangle trade data 
-    case "trade_fx":
-      var inputFXSymbol = fx.replace(/_/g, '/');
-      // var tradeSymbol = [];
-      var tradeOpenDate = [];
-      var tradeCloseDate = [];
-      var tradeOpenPrice = [];
-      var tradeClosePrice = []; 
-      var NetPnL = [];
-
-      // Create an array with the filtered values
-      filteredData = tradeData.filter(trade => {        
-        if (inputFXSymbol === trade.Symbol){
-          return true;
-        }
-        else {
-          return false;
-        };
-      }); 
-      console.log(filteredData);
-      // console.log(Object.keys(filteredData));
-
-      for (var i=0; i<filteredData.length; i++){
-        // console.log(Object.keys(filteredData[i]));
-        // console.log(filteredData[i]["Date Open"]);
-        tradeOpenDate.push(filteredData[i]["Date Open"]);
-        tradeCloseDate.push(filteredData[i]["Date Close"]);
-        tradeOpenPrice.push(filteredData[i]["Bought"]);
-        tradeClosePrice.push(filteredData[i]["Sold"]);
-        NetPnL.push(filteredData[i]["Net PL"]);
-      };
+    // Case #2: Graph 2016 fx chart with Rectangle shape trade data 
+    case "trade_fx":    
       
-      console.log(NetPnL);
+      var filteredTrades = filterTradeData (fx);     
+      console.log(filteredTrades);
+      
       var trace1 = {
         x: time,
         y: closeMid       
@@ -173,16 +186,15 @@ function buildPlot(fx, ao) {
       
       data = [trace1];
 
-      // get the rectangles for trade data
+      // Handle the rectangles shapes for trade data
       var shapes_array = [];
       
-      for (var t=0; t<filteredData.length; t++){
-        // var color_attr = {};
-        // var shape_attr = {};
+      for (var t=0; t<filteredTrades.NetPnL.length; t++){
         var line_attr = {};
         var fill_color = "";
 
-        if (NetPnL[t] >= 0) {
+        // Green rectangles for positive NetPnL, Red rectangles for negative NetPnL
+        if (filteredTrades.NetPnL[t] >= 0) {
           line_attr = {
               color: "green",
               width: 2
@@ -200,10 +212,10 @@ function buildPlot(fx, ao) {
         shape_attr = 
         {
           type: 'rect',
-          x0: tradeOpenDate[t],
-          y0: tradeOpenPrice[t],
-          x1: tradeCloseDate[t],
-          y1: tradeClosePrice[t],
+          x0: filteredTrades.tradeOpenDate[t],
+          y0: filteredTrades.tradeOpenPrice[t],
+          x1: filteredTrades.tradeCloseDate[t],
+          y1: filteredTrades.tradeClosePrice[t],
           opacity: 0.3,
           line: line_attr,
           fillcolor: fill_color
@@ -214,23 +226,6 @@ function buildPlot(fx, ao) {
       // console.log(shapes_array);       
     };
 
-      // var line_attr = {};
-      // var fill_color = "";
-      // if (NetPnL >= 0) {
-      //   line_attr = {
-      //       color: "green",
-      //       width: 2
-      //     };
-      //   fill_color = "green";
-      // }
-      // else {
-      //   line_attr = {
-      //     color: "red",
-      //     width: 2
-      //   },
-      //   fill_color =  "red";
-      // };          
-
       var layout = {
         title: `2016 ${fx} Chart with Trade Data`,
         xaxis: {
@@ -240,46 +235,13 @@ function buildPlot(fx, ao) {
           range: [closeMid[0], closeMid[-1]],
         },
         shapes: shapes_array   
+      };
+    break;
 
-        // shapes: [              
-        //   {
-        //     type: 'rect',
-        //     x0: tradeOpenDate[0],
-        //     y0: tradeOpenPrice[0],
-        //     x1: tradeCloseDate[0],
-        //     y1: tradeClosePrice[0],
-        //     line: line_attr,
-        //     fillcolor: fill_color
-        //   },         
-        //   {
-        //     type: 'rect',
-        //     x0: tradeOpenDate[1],
-        //     y0: tradeOpenPrice[1],
-        //     x1: tradeCloseDate[1],
-        //     y1: tradeClosePrice[1],
-        //     line: line_attr,
-        //     fillcolor: fill_color
-        //   }
-          // {
-          //   type: 'rect',
-          //   x0: tradeOpenDate[1],
-          //   y0: tradeOpenPrice[1],
-          //   x1: tradeCloseDate[1],
-          //   y1: tradeClosePrice[1],
-          //   line: {
-          //     color: "green",
-          //     width: 2
-          //   },
-          //   // fillcolor: 'rgba(128, 0, 128, 0.7)'
-          //   fillcolor:  "green"
-          // },
-        // ]
-      };      
-     
-      break;
-    //API for 2016 fx data 
+    //Case #3: Chart fx data only
     case "trade_analysis":
       handleTradeData (fx, ao);
+
       trace1 = {
         type: "scatter",
         mode: "lines",
