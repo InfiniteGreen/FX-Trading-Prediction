@@ -48,12 +48,12 @@ function prepUrl(fx,ao){
   //API with last 365 days of fx data   
   default:
     url = `https://api-fxtrade.oanda.com/v1/candles?instrument=${fx}&candleFormat=midpoint&count=365&granularity=D`;
-  }
+  };
   // console.log(url);
 };
 
 function handleTradeData (fx, ao) {   
-  var inputFXSymbol = fx.replace(/_/g, '/');
+  // var inputFXSymbol = fx.replace(/_/g, '/');
   // var tradeSymbol = [];
   var tradeOpenDate = [];
   var tradeCloseDate = [];
@@ -71,7 +71,6 @@ function handleTradeData (fx, ao) {
     };
   }); 
   console.log(filteredData);
-  // console.log(Object.keys(filteredData));
 
   for (var i=0; i<filteredData.length; i++){
     // console.log(Object.keys(filteredData[i]));
@@ -273,40 +272,87 @@ function buildPlot(fx, ao) {
 
 
 // renderTable renders the filteredData to the tbody
-function renderTable(fx) {
+function renderTable(fx, ao) {
 
-  var tbl_col = ["Date", "Open", "High", "Low","Close"];
+  var tbl_col = [];  
 
-  //Populate table head
-  var thead = d3.select("thead");          
-  thead.html("");
-  thead.append("tr");
-  tbl_col.forEach(col => {
-    thead.append("th").text(col);
-  });
-  
-  //Populate table body  
-  d3.json(url).then(function(response) {
-    // console.log(response);  
+  switch (ao) {
+    //API with last 365 days of fx data  
+    case "fx_general":
+      tbl_col = ["Date", "Open", "High", "Low","Close"];
 
-    var tbody = d3.select("tbody");
-            
-    tbody.html("");  
-
-    // loop to append data into table body
-    for (var r=0; r<10; r++){   
-      var row = tbody.append("tr");
+      //Populate table head
+      var thead = d3.select("thead");          
+      thead.html("");
+      thead.append("tr");
+      tbl_col.forEach(col => {
+        thead.append("th").text(col);
+      });
       
-      row.append("td").text(response.candles[r].time.substring(0,10));
-      row.append("td").text(response.candles[r].openMid);
-      row.append("td").text(response.candles[r].highMid);
-      row.append("td").text(response.candles[r].lowMid);
-      row.append("td").text(response.candles[r].closeMid);
+      //Populate table body  
+      d3.json(url).then(function(response) {
+        // console.log(response);  
 
-      // console.log(response.candles[r]);
+        var tbody = d3.select("tbody");
+                
+        tbody.html("");  
+
+        // loop to append data into table body
+        for (var r=0; r<10; r++){   
+          var row = tbody.append("tr");
+          
+          row.append("td").text(response.candles[r].time.substring(0,10));
+          row.append("td").text(response.candles[r].openMid);
+          row.append("td").text(response.candles[r].highMid);
+          row.append("td").text(response.candles[r].lowMid);
+          row.append("td").text(response.candles[r].closeMid);
+
+          // console.log(response.candles[r]);
+        };
+      });  
+
+      break;
+    //API for 2016 fx data 
+    case "trade_fx":
+      tbl_col = ["Trade Open Date", "Trade Open Price", "Trade Close Date", "Trade Close Price", "Net Profit & Loss"];
+    
+      //Populate table head
+      var thead = d3.select("thead");          
+      thead.html("");
+      thead.append("tr");
+      tbl_col.forEach(col => {
+        thead.append("th").text(col);
+      });
+      
+      //Populate table body  
+      var tbody = d3.select("tbody");
+                
+      tbody.html("");  
+
+      var filteredTrades = filterTradeData (fx);     
+      console.log(filteredTrades);
+
+      // loop to append data into table body
+      for (var t=0; t<filteredTrades.NetPnL.length; t++) {         
+        var row = tbody.append("tr");        
+        row.append("td").text(filteredTrades.tradeOpenDate[t]);
+        row.append("td").text(filteredTrades.tradeOpenPrice[t]);
+        row.append("td").text(filteredTrades.tradeCloseDate[t]);
+        row.append("td").text(filteredTrades.tradeClosePrice[t]);
+        row.append("td").text(filteredTrades.NetPnL[t]);       
+      };
+    
+    break;
+    //API for 2016 fx data 
+    case "trade_analysis":
+      url = `https://api-fxtrade.oanda.com/v1/candles?instrument=${fx}&candleFormat=midpoint&granularity=D&start=2016-01-01&end=2016-12-31`;
+      break;
+    //API with last 365 days of fx data   
+    default:
+      url = `https://api-fxtrade.oanda.com/v1/candles?instrument=${fx}&candleFormat=midpoint&count=365&granularity=D`;
     };
 
-  });  
+
 
 };
 
