@@ -41,7 +41,8 @@
                         <!-- <label for="fx_pair">Select FX Pair</label> -->
                         <label for="fxInput">Ticker</label>
                         <!-- <input class="form-control" id="fx_pair" type="text" placeholder="EUR/USD"> -->
-                        <select id="fxInput" onchange="getData(this.value)">
+                        <select id="fxInput" > 
+                            <!-- onchange="getData(this.value)" -->
                             <option value="AUD_USD">AUD/USD</option>
                             <option value="EUR_USD">EUR/USD</option>
                             <option value="GBP_USD">GBP/USD</option>
@@ -54,7 +55,8 @@
                       <li class="filter list-group-item">
                         <label for="analysis_option">Analysis Option</label>
                         <!-- <input class="form-control" id="study_option" type="text" placeholder="white oak">                   -->
-                        <select id="analysis_option" onchange="getData(this.value)">
+                        <select id="analysis_option" >
+                            <!-- onchange="getData(this.value)" -->
                           <option value="fx_general">FX General Info</option>
                           <option value="trade_fx">FX & Trading Info</option>
                           <option value="trade_analysis">Trade Analysis</option>                          
