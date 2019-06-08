@@ -6,7 +6,7 @@ Dan Li working on FX Trading Analysis.
 
 ## Project Phases:
 
-### Phase 1: Basic Chart with Options
+### Phase 1: Basic Chart with Analysis Options
 
 #### Functions:
 
@@ -23,7 +23,7 @@ Dan Li working on FX Trading Analysis.
 * API call to get Year 2016 general FX pair data
 * Filter user 2016 trade data for the FX pair
 * Plotly line Chart 2016 fx pair general data with trade data as Rectangle shapes. (Rectangle shapes represents trades, green for made $, red for lost $)
-* Table of FX pair trade data
+* Table of FX pair trade data (Trade specific Table Heading and Table body)
 
 3. Trade Analysis
 * Plotly Bar Chart for all trade data. (green for made $, red for lost $)
