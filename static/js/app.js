@@ -135,28 +135,6 @@ function buildPlot(fx, ao) {
 
     //Graph general 2016 chart with Rectangle trade data 
     case "trade_fx":
-      
-      // trace1 = {
-      //   type: "scatter",
-      //   mode: "lines",
-      //   name: name,
-      //   x: time,
-      //   y: closeMid,
-      //   line: {
-      //     color: "blue"
-      //   }
-      // };
-      // Candlestick Trace
-      // trace2 = {
-      //   type: "candlestick",
-      //   x: dates,
-      //   high: highPrices,
-      //   low: lowPrices,
-      //   open: openingPrices,
-      //   close: closingPrices
-      // };
-
-
       var inputFXSymbol = fx.replace(/_/g, '/');
       // var tradeSymbol = [];
       var tradeOpenDate = [];
@@ -187,79 +165,117 @@ function buildPlot(fx, ao) {
         NetPnL.push(filteredData[i]["Net PL"]);
       };
       
-      console.log(tradeOpenDate);
+      console.log(NetPnL);
       var trace1 = {
         x: time,
-        y: closeMid
-        // text: ['Unfilled Rectangle', 'Filled Rectangle'],
-        // mode: 'text'
+        y: closeMid       
       };
       
       data = [trace1];
+
+      // get the rectangles for trade data
+      var shapes_array = [];
+      
+      for (var t=0; t<filteredData.length; t++){
+        // var color_attr = {};
+        // var shape_attr = {};
+        var line_attr = {};
+        var fill_color = "";
+
+        if (NetPnL[t] >= 0) {
+          line_attr = {
+              color: "green",
+              width: 2
+            };
+          fill_color = "green";
+        }
+        else {
+          line_attr = {
+            color: "red",
+            width: 2
+          },
+          fill_color =  "red";
+        };          
+
+        shape_attr = 
+        {
+          type: 'rect',
+          x0: tradeOpenDate[t],
+          y0: tradeOpenPrice[t],
+          x1: tradeCloseDate[t],
+          y1: tradeClosePrice[t],
+          opacity: 0.3,
+          line: line_attr,
+          fillcolor: fill_color
+        };
+
+      // console.log(shape_attr);
+      shapes_array.push(shape_attr); 
+      // console.log(shapes_array);       
+    };
+
+      // var line_attr = {};
+      // var fill_color = "";
+      // if (NetPnL >= 0) {
+      //   line_attr = {
+      //       color: "green",
+      //       width: 2
+      //     };
+      //   fill_color = "green";
+      // }
+      // else {
+      //   line_attr = {
+      //     color: "red",
+      //     width: 2
+      //   },
+      //   fill_color =  "red";
+      // };          
+
       var layout = {
-        title: `${fx} Trade Rectangle Positioned Relative to the Axes`,
+        title: `2016 ${fx} Chart with Trade Data`,
         xaxis: {
-          range: [time[0], time[-1]],
-          // showgrid: true
+          range: [time[0], time[-1]],          
         },
         yaxis: {
           range: [closeMid[0], closeMid[-1]],
         },
-        shapes: [
-      
-          //Unfilled Rectangle
-      
+        shapes: shapes_array   
+
+        // shapes: [              
+        //   {
+        //     type: 'rect',
+        //     x0: tradeOpenDate[0],
+        //     y0: tradeOpenPrice[0],
+        //     x1: tradeCloseDate[0],
+        //     y1: tradeClosePrice[0],
+        //     line: line_attr,
+        //     fillcolor: fill_color
+        //   },         
+        //   {
+        //     type: 'rect',
+        //     x0: tradeOpenDate[1],
+        //     y0: tradeOpenPrice[1],
+        //     x1: tradeCloseDate[1],
+        //     y1: tradeClosePrice[1],
+        //     line: line_attr,
+        //     fillcolor: fill_color
+        //   }
           // {
           //   type: 'rect',
-          //   x0: 1,
-          //   y0: 1,
-          //   x1: 2,
-          //   y1: 3,
+          //   x0: tradeOpenDate[1],
+          //   y0: tradeOpenPrice[1],
+          //   x1: tradeCloseDate[1],
+          //   y1: tradeClosePrice[1],
           //   line: {
-          //     color: 'rgba(128, 0, 128, 1)'
-          //   }
+          //     color: "green",
+          //     width: 2
+          //   },
+          //   // fillcolor: 'rgba(128, 0, 128, 0.7)'
+          //   fillcolor:  "green"
           // },
-         
-          //Filled Rectangle      
-          {
-            type: 'rect',
-            x0: tradeOpenDate[0],
-            y0: tradeOpenPrice[0],
-            x1: tradeCloseDate[0],
-            y1: tradeClosePrice[0],
-            line: {
-              color: 'rgba(128, 0, 128, 1)',
-              width: 2
-            },
-            fillcolor: 'rgba(128, 0, 128, 0.7)'
-          },
-          {
-            type: 'rect',
-            x0: tradeOpenDate[1],
-            y0: tradeOpenPrice[1],
-            x1: tradeCloseDate[1],
-            y1: tradeClosePrice[1],
-            line: {
-              color: 'rgba(128, 0, 128, 1)',
-              width: 2
-            },
-            fillcolor: 'rgba(128, 0, 128, 0.7)'
-          },
-        ]
-      };
-      
-      // data = [trace1, trace2];
-      // layout = {
-      //   title: `${fx} closing prices`,
-      //   xaxis: {
-      //     range: [time[0], time[-1]],
-      //     type: "date"
-      //   },
-      //   yaxis: {
-      //     autorange: true,
-      //     type: "linear"
-      //   }
-      // };
+        // ]
+      };      
+     
       break;
     //API for 2016 fx data 
     case "trade_analysis":
