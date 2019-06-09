@@ -27,7 +27,7 @@ Dan Li working on FX Trading Analysis.
 
 3. Trade Analysis
 * Plotly Bar Chart for all trade data. (green for made $, red for lost $)
-* Table of FX pair trade data
+* List Summary FX pair trade data in table
 
 ### Phase 2: Multiple Chart per Analysis Option
 
