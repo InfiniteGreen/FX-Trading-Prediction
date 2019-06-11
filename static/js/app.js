@@ -293,6 +293,11 @@ function renderTable(fx, ao) {
     case "fx_general":
       tbl_col = ["Date", "Open", "High", "Low","Close"];
 
+      //Populate table title
+      var ttitle = d3.select("caption");          
+      ttitle.html("");
+      ttitle.text(`${fx} Last 10 Closing Prices`)
+
       //Populate table head
       var thead = d3.select("thead");
       //Initialize table head area          
@@ -328,6 +333,11 @@ function renderTable(fx, ao) {
     case "trade_fx":
       tbl_col = ["Trade Open Date", "Trade Open Price", "Trade Close Date", "Trade Close Price", "Net Profit & Loss"];
     
+      //Populate table title
+      var ttitle = d3.select("caption");          
+      ttitle.html("");
+      ttitle.text(`${fx} Trade Data`)
+      
       //Populate table head
       var thead = d3.select("thead");          
       thead.html("");
@@ -337,8 +347,7 @@ function renderTable(fx, ao) {
       });
       
       //Populate table body  
-      var tbody = d3.select("tbody");
-                
+      var tbody = d3.select("tbody");                
       tbody.html("");  
 
       var filteredTrades = filterTradeData (fx);     
@@ -357,7 +366,12 @@ function renderTable(fx, ao) {
     //API for 2016 fx data 
     case "trade_analysis":
       tbl_col = ["Ticker", "Total Net Profit and Loss"];
-  
+      
+      //Populate table title
+      var ttitle = d3.select("caption");          
+      ttitle.html("");
+      ttitle.text("Trade Summary")
+
       //Populate table head
       var thead = d3.select("thead");          
       thead.html("");

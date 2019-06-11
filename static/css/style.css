@@ -73,6 +73,19 @@ select {
   outline: none;
 }
 
+#table-area caption {
+  text-align: center;
+  font-size: 13px;
+  /* font-size: 1.8em; */
+  font-weight: bold;
+  /* background: #1b3146; */
+  /* color: #8e979f; */
+  color:aliceblue;
+  /* color:Ubuntu; */
+  /* background: aliceblue; */
+  margin-bottom: 10px;
+}
+
 #table-area th {
   text-align: center;
   font-size: 13px;
